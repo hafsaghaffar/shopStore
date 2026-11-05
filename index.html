@@ -1,0 +1,856 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LUXE - Premium Store</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#f0fdf4',
+                            100: '#dcfce7',
+                            500: '#22c55e',
+                            600: '#16a34a',
+                            700: '#15803d',
+                            900: '#14532d',
+                        },
+                        dark: '#0f172a',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Custom subtle scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans antialiased selection:bg-brand-500 selection:text-white">
+
+    <!-- Notification Toast -->
+    <div id="toast" class="fixed bottom-5 right-5 bg-slate-900 text-white px-5 py-3 rounded-xl shadow-2xl z-50 transform translate-y-20 opacity-0 transition-all duration-300 flex items-center gap-3 border border-slate-700">
+        <div id="toast-icon" class="text-brand-500"><i class="fa-solid fa-circle-check text-lg"></i></div>
+        <div id="toast-message" class="text-sm font-medium">Item added to cart!</div>
+    </div>
+
+    <!-- HEADER / NAVIGATION -->
+    <header class="sticky top-0 z-40 bg-white/90 backdrop-blur-md border-b border-slate-100 shadow-sm transition-all duration-300" id="navbar">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            <!-- Brand Logo -->
+            <a href="#home" class="flex items-center gap-2 text-2xl font-black tracking-tight text-slate-900 group">
+                <span class="w-10 h-10 rounded-xl bg-gradient-to-tr from-slate-900 to-slate-700 text-white flex items-center justify-center font-extrabold shadow-md group-hover:scale-105 transition-transform">L</span>
+                <span>LUXE<span class="text-brand-600">.</span></span>
+            </a>
+
+            <!-- Desktop Nav Links -->
+            <nav class="hidden md:flex items-center space-x-8 font-medium text-slate-600">
+                <a href="#home" class="nav-link hover:text-brand-600 transition-colors py-1 text-slate-900 font-semibold border-b-2 border-brand-600">Home</a>
+                <a href="#products" class="nav-link hover:text-brand-600 transition-colors py-1 border-b-2 border-transparent">Products</a>
+                <a href="#about" class="nav-link hover:text-brand-600 transition-colors py-1 border-b-2 border-transparent">About Us</a>
+                <a href="#contact" class="nav-link hover:text-brand-600 transition-colors py-1 border-b-2 border-transparent">Contact</a>
+            </nav>
+
+            <!-- Actions (Cart & Mobile Menu Button) -->
+            <div class="flex items-center gap-4">
+                <!-- Cart Button -->
+                <button id="cart-btn" onclick="toggleCart(true)" class="relative p-2.5 text-slate-700 hover:text-brand-600 hover:bg-slate-100 rounded-full transition-all focus:outline-none" aria-label="Shopping Cart">
+                    <i class="fa-solid fa-bag-shopping text-xl"></i>
+                    <span id="cart-badge" class="absolute -top-1 -right-1 bg-brand-600 text-white text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center border-2 border-white scale-0 transition-transform duration-300">0</span>
+                </button>
+
+                <!-- Mobile Menu Toggle Button -->
+                <button id="mobile-menu-btn" onclick="toggleMobileMenu()" class="md:hidden p-2 text-slate-700 hover:text-slate-900 focus:outline-none">
+                    <i class="fa-solid fa-bars text-2xl"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Navigation Menu -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white border-b border-slate-200 px-4 pt-2 pb-6 space-y-3 shadow-lg">
+            <a href="#home" onclick="toggleMobileMenu()" class="block px-3 py-2 rounded-lg text-base font-semibold text-slate-900 bg-slate-50">Home</a>
+            <a href="#products" onclick="toggleMobileMenu()" class="block px-3 py-2 rounded-lg text-base font-medium text-slate-600 hover:bg-slate-50 hover:text-brand-600">Products</a>
+            <a href="#about" onclick="toggleMobileMenu()" class="block px-3 py-2 rounded-lg text-base font-medium text-slate-600 hover:bg-slate-50 hover:text-brand-600">About Us</a>
+            <a href="#contact" onclick="toggleMobileMenu()" class="block px-3 py-2 rounded-lg text-base font-medium text-slate-600 hover:bg-slate-50 hover:text-brand-600">Contact</a>
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT -->
+    <main>
+        <!-- 1. HOME SECTION -->
+        <section id="home" class="relative pt-6 pb-20 md:py-24 overflow-hidden">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <!-- Hero Grid -->
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+                    <div class="lg:col-span-7 space-y-8 text-center lg:text-left">
+                        <span class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-brand-50 border border-brand-100 text-brand-700 text-xs sm:text-sm font-semibold tracking-wide uppercase">
+                            <i class="fa-solid fa-sparkles"></i> New Summer Collection 2026
+                        </span>
+                        <h1 class="text-4xl sm:text-6xl font-extrabold text-slate-900 leading-tight tracking-tight">
+                            Elevate Your Lifestyle With <span class="bg-gradient-to-r from-brand-600 to-emerald-400 bg-clip-text text-transparent">Premium Goods</span>
+                        </h1>
+                        <p class="text-lg text-slate-600 max-w-2xl mx-auto lg:mx-0 leading-relaxed">
+                            Discover an curated selection of top-tier electronics, fashion essentials, and luxury accessories tailored to upgrade your everyday life.
+                        </p>
+                        <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start pt-2">
+                            <a href="#products" class="px-8 py-4 bg-slate-900 hover:bg-brand-600 text-white font-semibold rounded-xl shadow-xl shadow-slate-900/10 hover:shadow-brand-600/20 transition-all duration-300 flex items-center justify-center gap-2 group">
+                                Shop Now 
+                                <i class="fa-solid fa-arrow-right group-hover:translate-x-1 transition-transform"></i>
+                            </a>
+                            <a href="#about" class="px-8 py-4 bg-white hover:bg-slate-100 text-slate-700 border border-slate-200 font-semibold rounded-xl transition-all duration-300 flex items-center justify-center">
+                                Our Story
+                            </a>
+                        </div>
+
+                        <!-- Stats Quick Glance -->
+                        <div class="pt-8 border-t border-slate-200 grid grid-cols-3 gap-4 text-center lg:text-left">
+                            <div>
+                                <p class="text-2xl font-bold text-slate-900">50k+</p>
+                                <p class="text-xs sm:text-sm text-slate-500 font-medium">Happy Customers</p>
+                            </div>
+                            <div>
+                                <p class="text-2xl font-bold text-slate-900">1.2k+</p>
+                                <p class="text-xs sm:text-sm text-slate-500 font-medium">Premium Products</p>
+                            </div>
+                            <div>
+                                <p class="text-2xl font-bold text-slate-900">4.9 ★</p>
+                                <p class="text-xs sm:text-sm text-slate-500 font-medium">Customer Rating</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Hero Image Banner -->
+                    <div class="lg:col-span-5 relative">
+                        <div class="absolute -top-6 -left-6 w-72 h-72 bg-brand-500/10 rounded-full filter blur-3xl -z-10"></div>
+                        <div class="absolute -bottom-6 -right-6 w-72 h-72 bg-emerald-500/10 rounded-full filter blur-3xl -z-10"></div>
+                        
+                        <div class="relative rounded-3xl overflow-hidden shadow-2xl border-4 border-white bg-slate-100">
+                            <img src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&w=800&q=80" alt="Hero Lifestyle Store" class="w-full h-[450px] object-cover hover:scale-105 transition-transform duration-700" onerror="this.src='https://placehold.co/800x600/1e293b/ffffff?text=Luxe+Store+Collection'">
+                            
+                            <!-- Floating Promo Card -->
+                            <div class="absolute bottom-6 left-6 right-6 bg-white/90 backdrop-blur-md p-4 rounded-2xl shadow-lg border border-white/50 flex items-center justify-between">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-12 h-12 rounded-xl bg-brand-50 text-brand-600 flex items-center justify-center font-bold text-lg">
+                                        <i class="fa-solid fa-tag"></i>
+                                    </div>
+                                    <div>
+                                        <p class="text-xs font-bold uppercase tracking-wider text-slate-400">Limited Offer</p>
+                                        <p class="text-sm font-bold text-slate-900">Get 20% Off Your First Order</p>
+                                    </div>
+                                </div>
+                                <span class="bg-slate-900 text-white text-xs font-bold px-3 py-1.5 rounded-lg">LUXE20</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Featured Categories Grid -->
+                <div class="mt-24">
+                    <div class="flex items-center justify-between mb-8">
+                        <div>
+                            <h2 class="text-2xl font-bold text-slate-900">Shop by Category</h2>
+                            <p class="text-slate-500 text-sm">Explore our top collections</p>
+                        </div>
+                        <a href="#products" onclick="filterCategory('All')" class="text-sm font-semibold text-brand-600 hover:text-brand-700 flex items-center gap-1">View All <i class="fa-solid fa-chevron-right text-xs"></i></a>
+                    </div>
+
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6">
+                        <!-- Category 1 -->
+                        <div onclick="filterCategory('Electronics')" class="group cursor-pointer relative h-48 rounded-2xl overflow-hidden shadow-md">
+                            <img src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=400&q=80" alt="Electronics" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" onerror="this.src='https://placehold.co/400x400/0f172a/ffffff?text=Electronics'">
+                            <div class="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-slate-950/20 to-transparent flex flex-col justify-end p-4">
+                                <h3 class="text-white font-bold text-lg">Electronics</h3>
+                                <p class="text-slate-300 text-xs">Headphones, Watches & More</p>
+                            </div>
+                        </div>
+                        <!-- Category 2 -->
+                        <div onclick="filterCategory('Fashion')" class="group cursor-pointer relative h-48 rounded-2xl overflow-hidden shadow-md">
+                            <img src="https://images.unsplash.com/photo-1445205170230-053b83016050?auto=format&fit=crop&w=400&q=80" alt="Fashion" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" onerror="this.src='https://placehold.co/400x400/0f172a/ffffff?text=Fashion'">
+                            <div class="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-slate-950/20 to-transparent flex flex-col justify-end p-4">
+                                <h3 class="text-white font-bold text-lg">Fashion</h3>
+                                <p class="text-slate-300 text-xs">Apparel & Footwear</p>
+                            </div>
+                        </div>
+                        <!-- Category 3 -->
+                        <div onclick="filterCategory('Accessories')" class="group cursor-pointer relative h-48 rounded-2xl overflow-hidden shadow-md">
+                            <img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=400&q=80" alt="Accessories" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" onerror="this.src='https://placehold.co/400x400/0f172a/ffffff?text=Accessories'">
+                            <div class="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-slate-950/20 to-transparent flex flex-col justify-end p-4">
+                                <h3 class="text-white font-bold text-lg">Accessories</h3>
+                                <p class="text-slate-300 text-xs">Watches, Bags & Essentials</p>
+                            </div>
+                        </div>
+                        <!-- Category 4 -->
+                        <div onclick="filterCategory('Home')" class="group cursor-pointer relative h-48 rounded-2xl overflow-hidden shadow-md">
+                            <img src="https://images.unsplash.com/photo-1513519245088-0e12902e5a38?auto=format&fit=crop&w=400&q=80" alt="Home Decor" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" onerror="this.src='https://placehold.co/400x400/0f172a/ffffff?text=Home+Decor'">
+                            <div class="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-slate-950/20 to-transparent flex flex-col justify-end p-4">
+                                <h3 class="text-white font-bold text-lg">Home Decor</h3>
+                                <p class="text-slate-300 text-xs">Modern Living space</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. PRODUCTS SECTION -->
+        <section id="products" class="py-20 bg-slate-100/70 border-t border-b border-slate-200">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <!-- Title & Filter Tabs -->
+                <div class="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
+                    <div>
+                        <span class="text-brand-600 font-bold uppercase tracking-wider text-xs">Curated Catalog</span>
+                        <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 mt-1">Our Featured Products</h2>
+                    </div>
+
+                    <!-- Filter Category Buttons -->
+                    <div class="flex flex-wrap gap-2" id="category-filters">
+                        <button onclick="filterCategory('All')" class="filter-btn active px-5 py-2.5 rounded-xl text-sm font-semibold transition-all bg-slate-900 text-white shadow-md">All Products</button>
+                        <button onclick="filterCategory('Electronics')" class="filter-btn px-5 py-2.5 rounded-xl text-sm font-semibold transition-all bg-white text-slate-600 hover:bg-slate-200">Electronics</button>
+                        <button onclick="filterCategory('Fashion')" class="filter-btn px-5 py-2.5 rounded-xl text-sm font-semibold transition-all bg-white text-slate-600 hover:bg-slate-200">Fashion</button>
+                        <button onclick="filterCategory('Accessories')" class="filter-btn px-5 py-2.5 rounded-xl text-sm font-semibold transition-all bg-white text-slate-600 hover:bg-slate-200">Accessories</button>
+                    </div>
+                </div>
+
+                <!-- Products Grid -->
+                <div id="products-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <!-- Dynamic Product Cards Injected Here via JavaScript -->
+                </div>
+            </div>
+        </section>
+
+        <!-- PROMOTIONAL BANNER -->
+        <section class="py-16 bg-slate-900 text-white relative overflow-hidden">
+            <div class="absolute right-0 top-0 w-1/3 h-full bg-brand-600/20 skew-x-12 transform translate-x-10"></div>
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                    <div class="space-y-4">
+                        <span class="bg-brand-500/20 text-brand-400 border border-brand-500/30 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-widest">Special Deal</span>
+                        <h2 class="text-3xl sm:text-5xl font-extrabold leading-tight">Join Our Club & Get 15% Discount</h2>
+                        <p class="text-slate-400">Subscribe to our newsletter to receive secret deals, weekly updates, and special gift announcements directly in your inbox.</p>
+                    </div>
+                    <div>
+                        <form onsubmit="handleSubscribe(event)" class="flex flex-col sm:flex-row gap-3">
+                            <input type="email" required placeholder="Enter your email address..." class="px-5 py-4 rounded-xl bg-slate-800 border border-slate-700 text-white placeholder-slate-500 focus:outline-none focus:border-brand-500 flex-1">
+                            <button type="submit" class="px-8 py-4 bg-brand-600 hover:bg-brand-500 font-bold rounded-xl text-white transition-colors shadow-lg shadow-brand-600/30 whitespace-nowrap">Subscribe Now</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. ABOUT US SECTION -->
+        <section id="about" class="py-24 bg-white">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <!-- Story Header -->
+                <div class="max-w-3xl mx-auto text-center space-y-4 mb-16">
+                    <span class="text-brand-600 font-bold uppercase tracking-wider text-xs">Who We Are</span>
+                    <h2 class="text-3xl sm:text-5xl font-extrabold text-slate-900">Crafting Exceptional Shopping Experiences</h2>
+                    <p class="text-slate-600 text-lg leading-relaxed">
+                        Founded in 2021, LUXE was created with a simple vision: to bring premium design, high durability, and modern aesthetics together under one roof with effortless online buying.
+                    </p>
+                </div>
+
+                <!-- Core Value Features Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-20">
+                    <div class="p-6 rounded-2xl bg-slate-50 border border-slate-100 text-center hover:shadow-xl transition-all duration-300">
+                        <div class="w-14 h-14 bg-brand-100 text-brand-600 rounded-2xl flex items-center justify-center mx-auto mb-5 text-2xl">
+                            <i class="fa-solid fa-truck-fast"></i>
+                        </div>
+                        <h3 class="font-bold text-slate-900 text-lg mb-2">Free Express Shipping</h3>
+                        <p class="text-slate-500 text-sm">On all orders over $99 nationwide with real-time tracking.</p>
+                    </div>
+
+                    <div class="p-6 rounded-2xl bg-slate-50 border border-slate-100 text-center hover:shadow-xl transition-all duration-300">
+                        <div class="w-14 h-14 bg-brand-100 text-brand-600 rounded-2xl flex items-center justify-center mx-auto mb-5 text-2xl">
+                            <i class="fa-solid fa-shield-halved"></i>
+                        </div>
+                        <h3 class="font-bold text-slate-900 text-lg mb-2">Secure Payments</h3>
+                        <p class="text-slate-500 text-sm">100% encrypted checkout with Visa, Mastercard & Paypal.</p>
+                    </div>
+
+                    <div class="p-6 rounded-2xl bg-slate-50 border border-slate-100 text-center hover:shadow-xl transition-all duration-300">
+                        <div class="w-14 h-14 bg-brand-100 text-brand-600 rounded-2xl flex items-center justify-center mx-auto mb-5 text-2xl">
+                            <i class="fa-solid fa-rotate-left"></i>
+                        </div>
+                        <h3 class="font-bold text-slate-900 text-lg mb-2">30-Day Guarantee</h3>
+                        <p class="text-slate-500 text-sm">Not satisfied? Return easily within 30 days for a full refund.</p>
+                    </div>
+
+                    <div class="p-6 rounded-2xl bg-slate-50 border border-slate-100 text-center hover:shadow-xl transition-all duration-300">
+                        <div class="w-14 h-14 bg-brand-100 text-brand-600 rounded-2xl flex items-center justify-center mx-auto mb-5 text-2xl">
+                            <i class="fa-solid fa-headset"></i>
+                        </div>
+                        <h3 class="font-bold text-slate-900 text-lg mb-2">24/7 Support</h3>
+                        <p class="text-slate-500 text-sm">Dedicated customer service team ready to assist you anytime.</p>
+                    </div>
+                </div>
+
+                <!-- Brand Story / Visual -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center rounded-3xl bg-slate-900 text-white p-8 sm:p-12 overflow-hidden relative">
+                    <div class="space-y-6">
+                        <h3 class="text-3xl font-extrabold">Our Quality Promise</h3>
+                        <p class="text-slate-300 leading-relaxed">
+                            Every item in our storefront undergoes rigorous quality control tests. We partner directly with sustainable manufacturers who share our passion for excellence, ethics, and innovation.
+                        </p>
+                        <div class="space-y-3">
+                            <div class="flex items-center gap-3">
+                                <i class="fa-solid fa-circle-check text-brand-500"></i>
+                                <span>Ethically sourced materials & packaging</span>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <i class="fa-solid fa-circle-check text-brand-500"></i>
+                                <span>Fast dispatch within 24 hours</span>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <i class="fa-solid fa-circle-check text-brand-500"></i>
+                                <span>Over 50,000 verified 5-star customer reviews</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="relative">
+                        <img src="https://images.unsplash.com/photo-1556742049-0a6747d0628e?auto=format&fit=crop&w=800&q=80" alt="Customer Experience" class="rounded-2xl shadow-xl w-full h-80 object-cover" onerror="this.src='https://placehold.co/600x400/1e293b/ffffff?text=Quality+Promise'">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. CONTACT US SECTION -->
+        <section id="contact" class="py-24 bg-slate-50 border-t border-slate-200">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center max-w-2xl mx-auto mb-16">
+                    <span class="text-brand-600 font-bold uppercase tracking-wider text-xs">Get In Touch</span>
+                    <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 mt-1">We'd Love To Hear From You</h2>
+                    <p class="text-slate-500 text-sm sm:text-base mt-2">Have a question about an order, product details, or partnership? Send us a message.</p>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-12">
+                    <!-- Contact Info Cards -->
+                    <div class="lg:col-span-5 space-y-6">
+                        <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 flex items-start gap-4">
+                            <div class="w-12 h-12 bg-brand-50 text-brand-600 rounded-xl flex items-center justify-center text-xl shrink-0">
+                                <i class="fa-solid fa-location-dot"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-slate-900 text-lg">Store Location</h4>
+                                <p class="text-slate-600 text-sm mt-1">123 Commerce Boulevard, Suite 500<br>New York, NY 10001, USA</p>
+                            </div>
+                        </div>
+
+                        <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 flex items-start gap-4">
+                            <div class="w-12 h-12 bg-brand-50 text-brand-600 rounded-xl flex items-center justify-center text-xl shrink-0">
+                                <i class="fa-solid fa-envelope"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-slate-900 text-lg">Email Us</h4>
+                                <p class="text-slate-600 text-sm mt-1">support@luxestore.com<br>info@luxestore.com</p>
+                            </div>
+                        </div>
+
+                        <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 flex items-start gap-4">
+                            <div class="w-12 h-12 bg-brand-50 text-brand-600 rounded-xl flex items-center justify-center text-xl shrink-0">
+                                <i class="fa-solid fa-phone"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-slate-900 text-lg">Call Us Directly</h4>
+                                <p class="text-slate-600 text-sm mt-1">+1 (800) 555-0199<br>Mon - Fri: 9:00 AM - 6:00 PM EST</p>
+                            </div>
+                        </div>
+
+                        <!-- Social Media Links -->
+                        <div class="pt-4">
+                            <h4 class="text-sm font-bold text-slate-900 uppercase tracking-wider mb-4">Follow Our Socials</h4>
+                            <div class="flex gap-3">
+                                <a href="#" class="w-10 h-10 bg-white border border-slate-200 rounded-xl flex items-center justify-center text-slate-600 hover:bg-brand-600 hover:text-white hover:border-brand-600 transition-all"><i class="fa-brands fa-facebook-f"></i></a>
+                                <a href="#" class="w-10 h-10 bg-white border border-slate-200 rounded-xl flex items-center justify-center text-slate-600 hover:bg-brand-600 hover:text-white hover:border-brand-600 transition-all"><i class="fa-brands fa-instagram"></i></a>
+                                <a href="#" class="w-10 h-10 bg-white border border-slate-200 rounded-xl flex items-center justify-center text-slate-600 hover:bg-brand-600 hover:text-white hover:border-brand-600 transition-all"><i class="fa-brands fa-twitter"></i></a>
+                                <a href="#" class="w-10 h-10 bg-white border border-slate-200 rounded-xl flex items-center justify-center text-slate-600 hover:bg-brand-600 hover:text-white hover:border-brand-600 transition-all"><i class="fa-brands fa-pinterest"></i></a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Interactive Form -->
+                    <div class="lg:col-span-7 bg-white p-8 sm:p-10 rounded-3xl shadow-sm border border-slate-100">
+                        <form onsubmit="handleContactSubmit(event)" class="space-y-6">
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                                <div>
+                                    <label class="block text-sm font-semibold text-slate-700 mb-2">Your Name</label>
+                                    <input type="text" required placeholder="John Doe" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:border-brand-600 focus:ring-2 focus:ring-brand-500/20 text-slate-900">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-semibold text-slate-700 mb-2">Email Address</label>
+                                    <input type="email" required placeholder="john@example.com" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:border-brand-600 focus:ring-2 focus:ring-brand-500/20 text-slate-900">
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-semibold text-slate-700 mb-2">Subject</label>
+                                <input type="text" required placeholder="Order inquiry / Feedback" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:border-brand-600 focus:ring-2 focus:ring-brand-500/20 text-slate-900">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-semibold text-slate-700 mb-2">Message</label>
+                                <textarea rows="4" required placeholder="Write your message here..." class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:border-brand-600 focus:ring-2 focus:ring-brand-500/20 text-slate-900 resize-none"></textarea>
+                            </div>
+                            <button type="submit" class="w-full py-4 bg-slate-900 hover:bg-brand-600 text-white font-bold rounded-xl shadow-lg transition-all duration-300">
+                                Send Message
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="bg-slate-950 text-slate-400 pt-16 pb-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-10 pb-12 border-b border-slate-800">
+                <!-- Brand Info -->
+                <div class="space-y-4">
+                    <a href="#home" class="flex items-center gap-2 text-2xl font-black text-white">
+                        <span class="w-9 h-9 rounded-lg bg-brand-600 text-white flex items-center justify-center font-bold">L</span>
+                        <span>LUXE<span class="text-brand-500">.</span></span>
+                    </a>
+                    <p class="text-sm text-slate-400 leading-relaxed">
+                        Your destination for premium quality lifestyle goods. Bringing elegant design directly to your doorstep.
+                    </p>
+                </div>
+
+                <!-- Quick Links -->
+                <div>
+                    <h4 class="text-white font-bold mb-4">Quick Links</h4>
+                    <ul class="space-y-2.5 text-sm">
+                        <li><a href="#home" class="hover:text-white transition-colors">Home</a></li>
+                        <li><a href="#products" class="hover:text-white transition-colors">All Products</a></li>
+                        <li><a href="#about" class="hover:text-white transition-colors">About Us</a></li>
+                        <li><a href="#contact" class="hover:text-white transition-colors">Contact Support</a></li>
+                    </ul>
+                </div>
+
+                <!-- Categories -->
+                <div>
+                    <h4 class="text-white font-bold mb-4">Categories</h4>
+                    <ul class="space-y-2.5 text-sm">
+                        <li><a href="#products" onclick="filterCategory('Electronics')" class="hover:text-white transition-colors">Electronics</a></li>
+                        <li><a href="#products" onclick="filterCategory('Fashion')" class="hover:text-white transition-colors">Fashion Apparel</a></li>
+                        <li><a href="#products" onclick="filterCategory('Accessories')" class="hover:text-white transition-colors">Accessories</a></li>
+                        <li><a href="#products" onclick="filterCategory('Home')" class="hover:text-white transition-colors">Home Decor</a></li>
+                    </ul>
+                </div>
+
+                <!-- Customer Care -->
+                <div>
+                    <h4 class="text-white font-bold mb-4">Customer Care</h4>
+                    <ul class="space-y-2.5 text-sm">
+                        <li><a href="#" class="hover:text-white transition-colors">Shipping Policy</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Returns & Exchanges</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Privacy Policy</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Terms of Service</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Copyright & Cards -->
+            <div class="pt-8 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 gap-4">
+                <p>&copy; 2026 LUXE Store Inc. All rights reserved.</p>
+                <div class="flex items-center gap-4 text-xl">
+                    <i class="fa-brands fa-cc-visa hover:text-white transition-colors"></i>
+                    <i class="fa-brands fa-cc-mastercard hover:text-white transition-colors"></i>
+                    <i class="fa-brands fa-cc-paypal hover:text-white transition-colors"></i>
+                    <i class="fa-brands fa-cc-apple-pay hover:text-white transition-colors"></i>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- SLIDE-OVER SHOPPING CART DRAWER -->
+    <div id="cart-drawer-overlay" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden transition-opacity duration-300 opacity-0" onclick="toggleCart(false)"></div>
+    
+    <div id="cart-drawer" class="fixed top-0 right-0 h-full w-full sm:w-[420px] bg-white z-50 shadow-2xl transform translate-x-full transition-transform duration-300 flex flex-col">
+        <!-- Drawer Header -->
+        <div class="p-6 border-b border-slate-100 flex items-center justify-between">
+            <div class="flex items-center gap-2">
+                <i class="fa-solid fa-bag-shopping text-brand-600 text-xl"></i>
+                <h3 class="text-xl font-bold text-slate-900">Your Shopping Cart</h3>
+                <span id="drawer-count" class="text-xs font-bold bg-slate-100 text-slate-600 px-2 py-1 rounded-full">0 items</span>
+            </div>
+            <button onclick="toggleCart(false)" class="p-2 text-slate-400 hover:text-slate-600 rounded-full hover:bg-slate-100 transition-colors">
+                <i class="fa-solid fa-xmark text-xl"></i>
+            </button>
+        </div>
+
+        <!-- Drawer Items Container -->
+        <div id="cart-items-container" class="flex-1 overflow-y-auto p-6 space-y-4">
+            <!-- Items populated by JS -->
+        </div>
+
+        <!-- Drawer Footer / Checkout -->
+        <div class="p-6 border-t border-slate-100 bg-slate-50 space-y-4">
+            <div class="space-y-2">
+                <div class="flex justify-between text-sm text-slate-500">
+                    <span>Subtotal</span>
+                    <span id="cart-subtotal" class="font-semibold text-slate-900">$0.00</span>
+                </div>
+                <div class="flex justify-between text-sm text-slate-500">
+                    <span>Estimated Shipping</span>
+                    <span class="font-semibold text-brand-600">FREE</span>
+                </div>
+                <div class="flex justify-between text-base font-bold text-slate-900 pt-2 border-t border-slate-200">
+                    <span>Total Amount</span>
+                    <span id="cart-total" class="text-brand-600 text-xl">$0.00</span>
+                </div>
+            </div>
+
+            <button onclick="handleCheckout()" class="w-full py-4 bg-slate-900 hover:bg-brand-600 text-white font-bold rounded-xl shadow-lg transition-all duration-300 flex items-center justify-center gap-2">
+                Proceed to Checkout
+                <i class="fa-solid fa-arrow-right text-sm"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        // --- 1. Product Data ---
+        const products = [
+            {
+                id: 1,
+                name: 'Wireless Noise-Canceling Headphones',
+                category: 'Electronics',
+                price: 199.99,
+                rating: 4.8,
+                reviews: 124,
+                image: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=600&q=80'
+            },
+            {
+                id: 2,
+                name: 'Minimalist Modern Smartwatch',
+                category: 'Electronics',
+                price: 149.50,
+                rating: 4.9,
+                reviews: 89,
+                image: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=600&q=80'
+            },
+            {
+                id: 3,
+                name: 'Premium Leather Crossbody Bag',
+                category: 'Accessories',
+                price: 120.00,
+                rating: 4.7,
+                reviews: 56,
+                image: 'https://images.unsplash.com/photo-1548036328-c9fa89d128fa?auto=format&fit=crop&w=600&q=80'
+            },
+            {
+                id: 4,
+                name: 'Classic Urban Cotton Jacket',
+                category: 'Fashion',
+                price: 89.99,
+                rating: 4.6,
+                reviews: 210,
+                image: 'https://images.unsplash.com/photo-1551028719-00167b16eac5?auto=format&fit=crop&w=600&q=80'
+            },
+            {
+                id: 5,
+                name: 'Portable Bluetooth Speaker',
+                category: 'Electronics',
+                price: 79.95,
+                rating: 4.8,
+                reviews: 95,
+                image: 'https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?auto=format&fit=crop&w=600&q=80'
+            },
+            {
+                id: 6,
+                name: 'Polarized UV Sunglasses',
+                category: 'Accessories',
+                price: 45.00,
+                rating: 4.5,
+                reviews: 42,
+                image: 'https://images.unsplash.com/photo-1511499767150-a48a237f0083?auto=format&fit=crop&w=600&q=80'
+            },
+            {
+                id: 7,
+                name: 'Ergonomic Desk Ceramic Lamp',
+                category: 'Home',
+                price: 65.00,
+                rating: 4.9,
+                reviews: 38,
+                image: 'https://images.unsplash.com/photo-1507473885765-e6ed057f782c?auto=format&fit=crop&w=600&q=80'
+            },
+            {
+                id: 8,
+                name: 'Sport Running Sneakers',
+                category: 'Fashion',
+                price: 110.00,
+                rating: 4.7,
+                reviews: 175,
+                image: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=600&q=80'
+            }
+        ];
+
+        // --- 2. Cart State ---
+        let cart = [];
+
+        // --- 3. Render Products ---
+        function renderProducts(filter = 'All') {
+            const grid = document.getElementById('products-grid');
+            grid.innerHTML = '';
+
+            const filtered = filter === 'All' ? products : products.filter(p => p.category === filter);
+
+            filtered.forEach(product => {
+                const card = document.createElement('div');
+                card.className = 'bg-white rounded-2xl overflow-hidden border border-slate-100 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col group';
+                
+                card.innerHTML = `
+                    <div class="relative h-64 overflow-hidden bg-slate-100">
+                        <img src="${product.image}" alt="${product.name}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" onerror="this.src='https://placehold.co/600x600/1e293b/ffffff?text=${encodeURIComponent(product.name)}'">
+                        <span class="absolute top-3 left-3 bg-white/90 backdrop-blur-md px-3 py-1 rounded-full text-xs font-bold text-slate-700 shadow-sm">
+                            ${product.category}
+                        </span>
+                    </div>
+
+                    <div class="p-5 flex-1 flex flex-col justify-between space-y-4">
+                        <div>
+                            <div class="flex items-center gap-1 text-amber-400 text-xs mb-2">
+                                <i class="fa-solid fa-star"></i>
+                                <span class="font-bold text-slate-700 ml-1">${product.rating}</span>
+                                <span class="text-slate-400">(${product.reviews})</span>
+                            </div>
+                            <h3 class="font-bold text-slate-900 text-base leading-snug group-hover:text-brand-600 transition-colors">${product.name}</h3>
+                        </div>
+
+                        <div class="flex items-center justify-between pt-2 border-t border-slate-100">
+                            <div>
+                                <span class="text-xs text-slate-400 block">Price</span>
+                                <span class="text-xl font-extrabold text-slate-900">$${product.price.toFixed(2)}</span>
+                            </div>
+
+                            <button onclick="addToCart(${product.id})" class="px-4 py-2.5 bg-slate-900 hover:bg-brand-600 text-white text-sm font-semibold rounded-xl transition-all shadow-sm flex items-center gap-2 active:scale-95">
+                                <i class="fa-solid fa-cart-plus"></i> Add
+                            </button>
+                        </div>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        // --- 4. Category Filtering ---
+        function filterCategory(category) {
+            // Update Active Tab Styles
+            const buttons = document.querySelectorAll('#category-filters button');
+            buttons.forEach(btn => {
+                if (btn.textContent.trim().toLowerCase().includes(category.toLowerCase()) || (category === 'All' && btn.textContent.includes('All'))) {
+                    btn.className = 'filter-btn active px-5 py-2.5 rounded-xl text-sm font-semibold transition-all bg-slate-900 text-white shadow-md';
+                } else {
+                    btn.className = 'filter-btn px-5 py-2.5 rounded-xl text-sm font-semibold transition-all bg-white text-slate-600 hover:bg-slate-200';
+                }
+            });
+
+            renderProducts(category);
+        }
+
+        // --- 5. Cart Logic ---
+        function addToCart(productId) {
+            const product = products.find(p => p.id === productId);
+            const existing = cart.find(item => item.id === productId);
+
+            if (existing) {
+                existing.quantity += 1;
+            } else {
+                cart.push({ ...product, quantity: 1 });
+            }
+
+            updateCartUI();
+            showToast(`Added <strong>${product.name}</strong> to cart!`);
+        }
+
+        function removeFromCart(productId) {
+            cart = cart.filter(item => item.id !== productId);
+            updateCartUI();
+        }
+
+        function updateQuantity(productId, delta) {
+            const item = cart.find(i => i.id === productId);
+            if (item) {
+                item.quantity += delta;
+                if (item.quantity <= 0) {
+                    removeFromCart(productId);
+                } else {
+                    updateCartUI();
+                }
+            }
+        }
+
+        function updateCartUI() {
+            // Badges & Counters
+            const totalCount = cart.reduce((sum, item) => sum + item.quantity, 0);
+            const badge = document.getElementById('cart-badge');
+            const drawerCount = document.getElementById('drawer-count');
+
+            badge.textContent = totalCount;
+            drawerCount.textContent = `${totalCount} item${totalCount !== 1 ? 's' : ''}`;
+
+            if (totalCount > 0) {
+                badge.classList.remove('scale-0');
+            } else {
+                badge.classList.add('scale-0');
+            }
+
+            // Render Drawer Items
+            const container = document.getElementById('cart-items-container');
+            if (cart.length === 0) {
+                container.innerHTML = `
+                    <div class="h-full flex flex-col items-center justify-center text-center text-slate-400 py-12">
+                        <i class="fa-solid fa-basket-shopping text-5xl mb-4 text-slate-300"></i>
+                        <p class="font-bold text-slate-700">Your cart is empty</p>
+                        <p class="text-xs text-slate-400 mt-1">Explore our catalog and add items!</p>
+                    </div>
+                `;
+            } else {
+                container.innerHTML = cart.map(item => `
+                    <div class="flex gap-4 p-3 rounded-xl bg-slate-50 border border-slate-100 items-center">
+                        <img src="${item.image}" alt="${item.name}" class="w-16 h-16 rounded-lg object-cover bg-white" onerror="this.src='https://placehold.co/100x100/1e293b/ffffff?text=Item'">
+                        <div class="flex-1 min-w-0">
+                            <h4 class="font-bold text-slate-900 text-sm truncate">${item.name}</h4>
+                            <p class="text-xs font-semibold text-brand-600 mt-0.5">$${item.price.toFixed(2)}</p>
+                            
+                            <div class="flex items-center gap-2 mt-2">
+                                <button onclick="updateQuantity(${item.id}, -1)" class="w-6 h-6 rounded-md bg-white border border-slate-200 flex items-center justify-center text-slate-600 text-xs font-bold hover:bg-slate-100">-</button>
+                                <span class="text-xs font-bold text-slate-800 w-4 text-center">${item.quantity}</span>
+                                <button onclick="updateQuantity(${item.id}, 1)" class="w-6 h-6 rounded-md bg-white border border-slate-200 flex items-center justify-center text-slate-600 text-xs font-bold hover:bg-slate-100">+</button>
+                            </div>
+                        </div>
+                        <button onclick="removeFromCart(${item.id})" class="text-slate-400 hover:text-rose-500 p-2 transition-colors">
+                            <i class="fa-solid fa-trash-can text-sm"></i>
+                        </button>
+                    </div>
+                `).join('');
+            }
+
+            // Calculations
+            const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            document.getElementById('cart-subtotal').textContent = `$${subtotal.toFixed(2)}`;
+            document.getElementById('cart-total').textContent = `$${subtotal.toFixed(2)}`;
+        }
+
+        // --- 6. Drawer Toggle ---
+        function toggleCart(open) {
+            const drawer = document.getElementById('cart-drawer');
+            const overlay = document.getElementById('cart-drawer-overlay');
+
+            if (open) {
+                overlay.classList.remove('hidden');
+                setTimeout(() => {
+                    overlay.classList.remove('opacity-0');
+                    drawer.classList.remove('translate-x-full');
+                }, 10);
+            } else {
+                drawer.classList.add('translate-x-full');
+                overlay.classList.add('opacity-0');
+                setTimeout(() => {
+                    overlay.classList.add('hidden');
+                }, 300);
+            }
+        }
+
+        // --- 7. Interactive Toast Notification ---
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toast-message').innerHTML = message;
+
+            toast.classList.remove('translate-y-20', 'opacity-0');
+            toast.classList.add('translate-y-0', 'opacity-100');
+
+            setTimeout(() => {
+                toast.classList.remove('translate-y-0', 'opacity-100');
+                toast.classList.add('translate-y-20', 'opacity-0');
+            }, 3000);
+        }
+
+        // --- 8. Navigation & Mobile Menu ---
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        }
+
+        // Update Nav Active Link on Scroll
+        window.addEventListener('scroll', () => {
+            const sections = document.querySelectorAll('section');
+            const navLinks = document.querySelectorAll('.nav-link');
+
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop - 100;
+                if (pageYOffset >= sectionTop) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navLinks.forEach(link => {
+                link.classList.remove('text-slate-900', 'font-semibold', 'border-brand-600');
+                link.classList.add('border-transparent');
+                if (link.getAttribute('href') === `#${current}`) {
+                    link.classList.add('text-slate-900', 'font-semibold', 'border-brand-600');
+                    link.classList.remove('border-transparent');
+                }
+            });
+        });
+
+        // --- 9. Form Submissions ---
+        function handleSubscribe(e) {
+            e.preventDefault();
+            showToast('Thank you for subscribing to LUXE newsletter!');
+            e.target.reset();
+        }
+
+        function handleContactSubmit(e) {
+            e.preventDefault();
+            showToast('Your message has been sent successfully!');
+            e.target.reset();
+        }
+
+        function handleCheckout() {
+            if (cart.length === 0) {
+                showToast('Your cart is empty!');
+                return;
+            }
+            showToast('Redirecting to secure checkout...');
+            setTimeout(() => {
+                cart = [];
+                updateCartUI();
+                toggleCart(false);
+            }, 1500);
+        }
+
+        // --- Initial Load ---
+        window.onload = function() {
+            renderProducts();
+            updateCartUI();
+        };
+    </script>
+</body>
+</html>
